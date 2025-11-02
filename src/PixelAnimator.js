@@ -258,53 +258,100 @@ function CanvasAnimator({ images, fps, scale, width, height, className, naturalS
   const rafRef = useRef(0);
   const accRef = useRef(0);
   const lastRef = useRef(performance.now());
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
+
+    const ctx = canvas.getContext("2d", {
+      alpha: true,
+      desynchronized: true // Performance optimization for animations
+    });
 
     const dpr = window.devicePixelRatio || 1;
     const targetW = (width ?? naturalSize.w * scale) | 0;
     const targetH = (height ?? naturalSize.h * scale) | 0;
 
+    // Optimize canvas rendering
     canvas.style.width = targetW + "px";
     canvas.style.height = targetH + "px";
 
-    canvas.width = Math.round(targetW * dpr);
-    canvas.height = Math.round(targetH * dpr);
+    // Use lower resolution for better performance on high DPI displays
+    const optimizedDpr = dpr > 2 ? 2 : dpr;
+    canvas.width = Math.round(targetW * optimizedDpr);
+    canvas.height = Math.round(targetH * optimizedDpr);
 
     ctx.imageSmoothingEnabled = false;
+    ctx.globalAlpha = 1.0;
 
+    // Pre-calculate drawing parameters
     const frameDur = 1000 / fps;
+    const imgWidth = images[0].naturalWidth;
+    const imgHeight = images[0].naturalHeight;
+
+    let lastFpsUpdate = performance.now();
+    let fpsFrameCount = 0;
 
     const draw = () => {
+      // Clear canvas efficiently
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const sx = (canvas.width / images[0].naturalWidth) | 0;
-      const sy = (canvas.height / images[0].naturalHeight) | 0;
+
+      // Calculate scale and position once
+      const sx = (canvas.width / imgWidth) | 0;
+      const sy = (canvas.height / imgHeight) | 0;
       const s = Math.max(1, Math.min(sx, sy));
-      const dw = images[0].naturalWidth * s;
-      const dh = images[0].naturalHeight * s;
+      const dw = imgWidth * s;
+      const dh = imgHeight * s;
       const dx = ((canvas.width - dw) / 2) | 0;
       const dy = ((canvas.height - dh) / 2) | 0;
 
-      ctx.drawImage(images[idxRef.current], 0, 0, images[0].naturalWidth, images[0].naturalHeight, dx, dy, dw, dh);
+      // Draw current frame
+      const currentImage = images[idxRef.current];
+      if (currentImage && currentImage.complete) {
+        ctx.drawImage(currentImage, 0, 0, imgWidth, imgHeight, dx, dy, dw, dh);
+      }
     };
 
     const loop = (t) => {
+      // Performance monitoring
+      if (PERF_MONITORING) {
+        fpsFrameCount++;
+        if (t - lastFpsUpdate >= 1000) {
+          console.log(`CanvasAnimator FPS: ${fpsFrameCount}`);
+          fpsFrameCount = 0;
+          lastFpsUpdate = t;
+        }
+      }
+
       const dt = t - lastRef.current;
       lastRef.current = t;
       accRef.current += dt;
+
       while (accRef.current >= frameDur) {
         idxRef.current = (idxRef.current + 1) % images.length;
         accRef.current -= frameDur;
       }
+
       draw();
       rafRef.current = requestAnimationFrame(loop);
     };
 
+    // Start animation loop
     rafRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafRef.current);
+
+    // Cleanup function
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+
+      // Clear canvas to prevent memory leaks
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    };
   }, [fps, images, scale, width, height, naturalSize.w, naturalSize.h]);
 
   return (
