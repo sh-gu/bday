@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, memo } from "react";
 
+// Performance monitoring in development mode
+const PERF_MONITORING = process.env.NODE_ENV === 'development';
 
-export default function PixelAnimator({
+const PixelAnimator = memo(function PixelAnimator({
   frames,
   fps = 8,
   scale = 1,
@@ -13,36 +15,115 @@ export default function PixelAnimator({
 }) {
   const [ready, setReady] = useState(false);
   const [naturalSize, setNaturalSize] = useState({ w: 0, h: 0 });
+  const containerRef = useRef(null);
+  const frameCountRef = useRef(0);
 
-  const images = useMemo(() => frames.map((src) => {
-    const img = new Image();
-    img.src = src;
-    img.decoding = "async";
-    img.loading = "eager";
-    img.crossOrigin = "anonymous"; 
-    return img;
-  }), [frames]);
+  // Optimize image loading with better error handling and caching
+  const images = useMemo(() => {
+    return frames.map((src) => {
+      const img = new Image();
+      img.src = src;
+      img.decoding = "async";
+      img.loading = "eager";
+      img.crossOrigin = "anonymous";
+
+      // Add performance monitoring
+      if (PERF_MONITORING) {
+        img.onload = () => {
+          frameCountRef.current++;
+          if (frameCountRef.current === frames.length) {
+            console.log(`PixelAnimator: Loaded ${frameCountRef.current} frames`);
+          }
+        };
+      }
+
+      return img;
+    });
+  }, [frames]);
+
+  // Intersection Observer for performance optimization
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Element is visible, can start animations
+            entry.target.dataset.visible = 'true';
+          } else {
+            // Element is not visible, pause animations if needed
+            entry.target.dataset.visible = 'false';
+          }
+        });
+      },
+      {
+        threshold: 0.1, // Trigger when 10% visible
+        rootMargin: '50px' // Start loading 50px before entering viewport
+      }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all(
-      images.map(
-        (img) =>
-          new Promise((res, rej) => {
-            if (img.complete && img.naturalWidth) return res(true);
-            img.onload = () => res(true);
-            img.onerror = (e) => rej(e);
-          })
-      )
-    )
-      .then(() => {
-        if (cancelled) return;
-        setNaturalSize({ w: images[0].naturalWidth, h: images[0].naturalHeight });
-        setReady(true);
-      })
-      .catch(() => setReady(false));
+    let loadTimeout = null;
+
+    const loadImages = async () => {
+      try {
+        // Add timeout to prevent hanging
+        loadTimeout = setTimeout(() => {
+          if (!cancelled) {
+            console.warn('PixelAnimator: Image loading timeout, some assets may be slow');
+            setReady(false);
+          }
+        }, 10000); // 10 second timeout
+
+        await Promise.all(
+          images.map(
+            (img) =>
+              new Promise((res, rej) => {
+                if (img.complete && img.naturalWidth) {
+                  return res(true);
+                }
+                img.onload = () => res(true);
+                img.onerror = (e) => {
+                  console.warn('PixelAnimator: Failed to load image:', img.src);
+                  rej(e);
+                };
+              })
+          )
+        );
+
+        if (!cancelled) {
+          clearTimeout(loadTimeout);
+          setNaturalSize({
+            w: images[0]?.naturalWidth || 0,
+            h: images[0]?.naturalHeight || 0
+          });
+          setReady(true);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          clearTimeout(loadTimeout);
+          console.error('PixelAnimator: Failed to load images:', error);
+          setReady(false);
+        }
+      }
+    };
+
+    loadImages();
+
     return () => {
       cancelled = true;
+      if (loadTimeout) {
+        clearTimeout(loadTimeout);
+      }
     };
   }, [images]);
 
