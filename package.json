@@ -1,6 +1,6 @@
 {
-  "name": "matthew-bday-cake",
-  "version": "0.1.0",
+  "name": "birthday-celebration-app",
+  "version": "1.0.0",
   "homepage": "https://tinabyte.github.io/bdaycakee",
   "private": true,
   "dependencies": {
@@ -11,7 +11,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^4.2.4"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -19,19 +19,31 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:analyze": "npm run build && npx bundle-analyzer build/static/js/*.js",
+    "start:debug": "REACT_APP_DEBUG=true npm start",
+    "test:coverage": "npm test -- --coverage --watchAll=false",
+    "lint": "echo 'No ESLint configured - skipping'",
+    "typecheck": "echo 'No TypeScript configured - skipping'",
+    "clean": "rm -rf build node_modules package-lock.json && npm install"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "no-console": "warn",
+      "no-debugger": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    }
   },
   "browserslist": {
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not ie <= 11"
     ],
     "development": [
       "last 1 chrome version",
@@ -40,6 +52,11 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.3.0",
+    "source-map-explorer": "^2.5.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 }

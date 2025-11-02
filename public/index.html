@@ -4,40 +4,189 @@
 <head>
   <meta charset="utf-8" />
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Web site created using create-react-app" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-  <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-  <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-  <title>React App</title>
+  <!-- Enhanced viewport configuration for mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover" />
+
+  <!-- Theme and app appearance -->
+  <meta name="theme-color" content="#000000" />
+  <meta name="msapplication-TileColor" content="#000000" />
+  <meta name="msapplication-config" content="%PUBLIC_URL%/browserconfig.xml" />
+
+  <!-- App description and SEO -->
+  <meta name="description" content="Interactive birthday celebration app with animated cake, microphone-controlled effects, and confetti celebrations. Perfect for birthday parties and special occasions!" />
+  <meta name="keywords" content="birthday, celebration, cake, interactive, animation, confetti, party, fun" />
+  <meta name="author" content="Birthday Celebration App" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tinabyte.github.io/bdaycakee/" />
+  <meta property="og:title" content="Interactive Birthday Celebration" />
+  <meta property="og:description" content="Interactive birthday app with animated cake and microphone-controlled celebrations!" />
+  <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://tinabyte.github.io/bdaycakee/" />
+  <meta property="twitter:title" content="Interactive Birthday Celebration" />
+  <meta property="twitter:description" content="Interactive birthday app with animated cake and microphone-controlled celebrations!" />
+  <meta property="twitter:image" content="%PUBLIC_URL%/og-image.png" />
+
+  <!-- Apple touch icons -->
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/apple-touch-icon-152x152.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon-180x180.png" />
+  <link rel="apple-touch-icon" sizes="167x167" href="%PUBLIC_URL%/apple-touch-icon-167x167.png" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+  <!-- Preload critical resources for performance -->
+  <link rel="preload" href="%PUBLIC_URL%/static/js/bundle.js" as="script" />
+
+  <!-- DNS prefetch for external resources -->
+  <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+
+  <!-- Security and performance headers -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <!-- Accessibility improvements -->
+  <meta name="color-scheme" content="dark light" />
+  <meta name="supported-color-schemes" content="dark light" />
+
+  <!-- Enhanced noscript message -->
+  <style>
+    .noscript-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .noscript-content {
+      max-width: 500px;
+    }
+    .noscript-title {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #ff6b6b;
+    }
+    .noscript-message {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .noscript-help {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  </style>
+
+  <title>Birthday Celebration - Interactive Cake & Confetti</title>
 </head>
 
 <body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
-  <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+  <!-- Enhanced noscript experience -->
+  <noscript>
+    <div class="noscript-container">
+      <div class="noscript-content">
+        <div class="noscript-title">🎂 JavaScript Required</div>
+        <div class="noscript-message">
+          This interactive birthday celebration app requires JavaScript to run.
+          Please enable JavaScript in your browser settings to enjoy the animated cake,
+          microphone interactions, and confetti celebrations!
+        </div>
+        <div class="noscript-help">
+          <strong>Need help?</strong> Search for "enable JavaScript" + your browser name
+          for step-by-step instructions.
+        </div>
+      </div>
+    </div>
+  </noscript>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  <!-- Main app container -->
+  <div id="root" role="application" aria-label="Birthday Celebration App"></div>
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+  <!-- Performance and accessibility features -->
+  <script>
+    // Detect user preferences for accessibility
+    (function() {
+      // Check for reduced motion preference
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.setAttribute('data-reduced-motion', 'true');
+      }
+
+      // Check for color scheme preference
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+
+      // Add loading state class
+      document.documentElement.classList.add('app-loading');
+
+      // Remove loading class when page is fully loaded
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          document.documentElement.classList.remove('app-loading');
+          document.documentElement.classList.add('app-loaded');
+        }, 100);
+      });
+
+      // Handle visibility change for performance optimization
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          document.documentElement.setAttribute('data-page-hidden', 'true');
+        } else {
+          document.documentElement.removeAttribute('data-page-hidden');
+        }
+      });
+
+      // Monitor performance in development
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            const perfData = performance.getEntriesByType('navigation')[0];
+            console.log('Page Load Performance:');
+            console.log('- DOM Content Loaded:', perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart, 'ms');
+            console.log('- Page Load:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+            console.log('- Total Load Time:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
+          }, 0);
+        });
+      }
+    })();
+  </script>
+
+  <!-- Schema.org structured data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Birthday Celebration App",
+    "description": "Interactive birthday celebration app with animated cake and microphone-controlled effects",
+    "url": "https://tinabyte.github.io/bdaycakee/",
+    "applicationCategory": "Entertainment",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "accessibilityFeature": [
+      "keyboardNavigation",
+      "screenReaderFriendly",
+      "highContrastMode",
+      "reducedMotion"
+    ]
+  }
+  </script>
 </body>
 
 </html>
