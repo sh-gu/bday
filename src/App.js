@@ -10,8 +10,18 @@ import cake20 from "./assets/20.png";
 import birthdayText from "./assets/birthdaytext.png";
 import "./App.css";
 import Confetti from "./Confetti";
-import { useEffect, useRef, useState } from "react";
+import ErrorBoundary from "./components/ErrorBoundary";
+import LoadingSpinner from "./components/LoadingSpinner";
+import VolumeIndicator from "./components/VolumeIndicator";
+import { useEffect, useRef, useState, useCallback } from "react";
 import birthdaySong from "./assets/bdayaudo.mp3";
+import {
+  VOLUME_THRESHOLDS,
+  AUDIO_CONFIG,
+  ANIMATION_CONFIG,
+  UI_CONFIG,
+  ACCESSIBILITY_CONFIG
+} from "./config/appConfig";
 
 
 export default function App() {
