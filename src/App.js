@@ -89,8 +89,7 @@ export default function App() {
         }
         const rms = Math.sqrt(sum / data.length);
 
-        try { console.debug('mic rms=', rms.toFixed(4)); } catch (e) {}
-        const chosen = pickStaticFrame(rms);
+                const chosen = pickStaticFrame(rms);
         setStaticFrame((prev) => {
           if (prev === chosen) return prev;
           return chosen;
