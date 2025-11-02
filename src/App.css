@@ -59,6 +59,25 @@ body,
   flex-direction: column;
   gap: 12px;
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Manual trigger button styling */
+.manual-trigger-btn {
+  background: rgba(76, 175, 80, 0.8);
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.manual-trigger-btn:hover {
+  background: rgba(76, 175, 80, 1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.manual-trigger-btn:active {
+  transform: scale(0.95);
 }
 
 .cakeLoop img,
