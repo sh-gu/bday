@@ -184,7 +184,6 @@ export default function App() {
           duration={8000}
           onDone={() => {
             setCelebrating(false);
-            setTimeout(() => setShowMatthew(true), 250);
           }}
         />
       )}
