@@ -360,8 +360,11 @@ function CanvasAnimator({ images, fps, scale, width, height, className, naturalS
       className={className}
       style={{
         imageRendering: "pixelated", // helps some browsers when canvas is CSS-scaled
+        willChange: 'transform', // Performance hint for browser
       }}
       {...domProps}
     />
   );
 }
+
+export default PixelAnimator;
