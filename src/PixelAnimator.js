@@ -128,33 +128,46 @@ const PixelAnimator = memo(function PixelAnimator({
   }, [images]);
 
   if (!ready || images.length === 0) {
-    return <div className={"inline-flex items-center justify-center text-xs text-gray-500 " + (className || "")}>Loading…</div>;
+    return (
+      <div
+        ref={containerRef}
+        className={"inline-flex items-center justify-center text-xs text-gray-500 " + (className || "")}
+        style={{ minWidth: '60px', minHeight: '60px' }}
+        {...domProps}
+      >
+        Loading…
+      </div>
+    );
   }
 
-  return mode === "img" ? (
-    <ImgAnimator
-      images={images}
-      fps={fps}
-      scale={scale}
-      width={width}
-      height={height}
-      className={className}
-      naturalSize={naturalSize}
-      {...domProps}
-    />
-  ) : (
-    <CanvasAnimator
-      images={images}
-      fps={fps}
-      scale={scale}
-      width={width}
-      height={height}
-      className={className}
-      naturalSize={naturalSize}
-      {...domProps}
-    />
+  return (
+    <div ref={containerRef}>
+      {mode === "img" ? (
+        <ImgAnimator
+          images={images}
+          fps={fps}
+          scale={scale}
+          width={width}
+          height={height}
+          className={className}
+          naturalSize={naturalSize}
+          {...domProps}
+        />
+      ) : (
+        <CanvasAnimator
+          images={images}
+          fps={fps}
+          scale={scale}
+          width={width}
+          height={height}
+          className={className}
+          naturalSize={naturalSize}
+          {...domProps}
+        />
+      )}
+    </div>
   );
-}
+});
 
 function ImgAnimator({ images, fps, scale, width, height, className, naturalSize, ...domProps }) {
   const [idx, setIdx] = useState(0);
