@@ -181,3 +181,158 @@ body,
   }
 }
 
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .App {
+    padding: 10px;
+  }
+
+  .birthdayText {
+    max-width: 90vw;
+    max-height: 25vh;
+  }
+
+  .cake {
+    transform: translateY(calc(-1 * var(--cake-overlap))) translateX(var(--cake-offset-x));
+    padding-right: 0;
+  }
+
+  .manual-trigger-btn {
+    font-size: 12px;
+    padding: 8px 16px;
+    margin-top: 15px;
+  }
+
+  .mic-error-message {
+    max-width: 90vw;
+    font-size: 13px;
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .App {
+    padding: 5px;
+  }
+
+  .birthdayText {
+    max-width: 95vw;
+    max-height: 20vh;
+  }
+
+  .cakeLoop {
+    gap: 8px;
+  }
+
+  .manual-trigger-btn {
+    font-size: 11px;
+    padding: 6px 12px;
+    margin-top: 10px;
+  }
+
+  .mic-error-message {
+    max-width: 95vw;
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+}
+
+/* Large screens and desktop optimization */
+@media (min-width: 1200px) {
+  .birthdayText {
+    max-width: 1000px;
+    max-height: 1000px;
+  }
+
+  .cake {
+    padding-right: 200px;
+  }
+}
+
+/* Very tall screens (portrait tablets) */
+@media (min-height: 1024px) and (orientation: portrait) {
+  .birthdayText {
+    max-height: 35vh;
+  }
+
+  .manual-trigger-btn {
+    margin-top: 30px;
+  }
+}
+
+/* Landscape orientation optimization */
+@media (orientation: landscape) and (max-height: 600px) {
+  .App {
+    padding: 5px env(safe-area-inset-right) 5px env(safe-area-inset-left);
+  }
+
+  .birthdayText {
+    max-height: 15vh;
+  }
+
+  .cakeLoop {
+    gap: 8px;
+  }
+
+  .manual-trigger-btn {
+    margin-top: 10px;
+    font-size: 12px;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .cakeLoop img,
+  .cakeLoop canvas {
+    image-rendering: auto;
+  }
+
+  .birthdayText {
+    image-rendering: auto;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .App.touch-feedback {
+    animation: none;
+  }
+
+  .manual-trigger-btn {
+    transition: none;
+  }
+
+  .manual-trigger-btn:hover {
+    transform: none;
+  }
+
+  .manual-trigger-btn:active {
+    transform: none;
+  }
+
+  .confetti-piece {
+    animation: none;
+    transform: translateY(110vh);
+  }
+}
+
+/* Dark mode support (if system prefers it) */
+@media (prefers-color-scheme: dark) {
+  .skip-link {
+    background: white;
+    color: black;
+  }
+
+  .skip-link:focus {
+    background: #4CAF50;
+    color: white;
+  }
+}
+
+/* Light mode support (if system prefers it) */
+@media (prefers-color-scheme: light) {
+  .App {
+    background-color: #1a1a1a;
+  }
+}
+
