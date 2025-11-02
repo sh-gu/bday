@@ -105,14 +105,7 @@ export default function App() {
   };
 
   const [celebrating, setCelebrating] = useState(false);
-  const [showMatthew, setShowMatthew] = useState(false);
-  let matthewSrc = null;
-  try {
-    matthewSrc = require("./assets/matthew.jpg");
-  } catch (e) {
-    matthewSrc = null;
-  }
-  useEffect(() => {
+    useEffect(() => {
     if (staticFrame === cake20) {
       stopMicMonitoring(false);
       setCelebrating(true);
