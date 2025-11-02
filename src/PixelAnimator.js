@@ -171,28 +171,64 @@ const PixelAnimator = memo(function PixelAnimator({
 
 function ImgAnimator({ images, fps, scale, width, height, className, naturalSize, ...domProps }) {
   const [idx, setIdx] = useState(0);
+  const isVisibleRef = useRef(true);
 
   useEffect(() => {
     setIdx(0);
   }, [images.length]);
+
   const rafRef = useRef(0);
   const accRef = useRef(0);
   const lastRef = useRef(performance.now());
+  const frameCountRef = useRef(0);
 
   useEffect(() => {
     const frameDur = 1000 / fps;
+    let lastFpsUpdate = performance.now();
+    let fpsFrameCount = 0;
+
     const loop = (t) => {
+      // Check if element is still visible (from IntersectionObserver)
+      const container = document.querySelector('[data-visible="false"]');
+      if (container && container.contains(document.activeElement)) {
+        // Element is not visible, pause animation
+        rafRef.current = requestAnimationFrame(loop);
+        return;
+      }
+
       const dt = t - lastRef.current;
       lastRef.current = t;
       accRef.current += dt;
+
+      // FPS monitoring in development
+      if (PERF_MONITORING) {
+        fpsFrameCount++;
+        if (t - lastFpsUpdate >= 1000) {
+          console.log(`ImgAnimator FPS: ${fpsFrameCount}`);
+          fpsFrameCount = 0;
+          lastFpsUpdate = t;
+        }
+      }
+
       while (accRef.current >= frameDur) {
-        setIdx((i) => (i + 1) % images.length);
+        setIdx((i) => {
+          frameCountRef.current = (i + 1) % images.length;
+          return frameCountRef.current;
+        });
         accRef.current -= frameDur;
       }
+
       rafRef.current = requestAnimationFrame(loop);
     };
+
     rafRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafRef.current);
+
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
   }, [fps, images.length]);
 
   const cssW = width ?? Math.round(naturalSize.w * scale);
