@@ -116,10 +116,27 @@ body,
   z-index: 2;
   padding-right: 200px;
 }
+
 .cake,
 .cake img,
 .cake canvas {
-  cursor: crosshair;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced touch interaction for mobile */
+@media (hover: none) {
+  .cake,
+  .cake img,
+  .cake canvas {
+    cursor: pointer;
+  }
+
+  .cake:hover,
+  .cake img:hover,
+  .cake canvas:hover {
+    filter: brightness(1.1);
+  }
 }
 
 .birthdayText {
