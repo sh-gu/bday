@@ -188,27 +188,6 @@ export default function App() {
         />
       )}
 
-      {showMatthew && (
-        <div
-          className="matthew-overlay"
-          onClick={() => setShowMatthew(false)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setShowMatthew(false);
-          }}
-          role="dialog"
-          tabIndex={-1}
-        >
-          <div className="matthew-card">
-            {matthewSrc ? (
-              <img src={matthewSrc} alt="Matthew" />
-            ) : (
-              <div style={{ color: "white", padding: 24, fontSize: 20 }}>
-                Matthew
-              </div>
-            )}
           </div>
-        </div>
-      )}
-    </div>
   );
 }
